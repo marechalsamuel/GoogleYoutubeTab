@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "GoogleYoutubeTab",
-  "version": "1.1",
+  "version": "1.2",
   "description": "Add a Youtube and a Twitter tab in Google results page tabs",
   "icons": {
     "48": "icons/icon.png",
