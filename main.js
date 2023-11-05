@@ -19,7 +19,7 @@ const createTabV1 = ({ label, url, icon, customOptions = {} }) => { // TODO use 
   }
   const tab = document.getElementById(id)
   if (!tab) {
-    const search = getGoogleSearch()
+    const search = getGoogleSearchFromUrl()
 
     const container = document.createElement('div')
     TABS_CLASS_NAMES_V1.forEach(tabsClassName => container.classList.add(tabsClassName))
@@ -107,18 +107,6 @@ let intentsLeft = 20
 
 const main = () => {
   intentsLeft--
-  if (hasItemWithClassNames(TABS_CLASS_NAMES_V1)) {
-    intentsLeft = 0
-    return tabs.forEach(createTabV1)
-  }
-
-  if (hasItemWithClassNames(TABS_CLASS_NAMES_V2)) {
-    const createTabV2 = createTabVNplus1({
-      classNames: TABS_CLASS_NAMES_V2
-    })
-    intentsLeft = 0
-    return tabs.forEach(createTabV2)
-  }
 
   if (hasItemWithClassNames(TABS_CLASS_NAMES_V_2023_11_05)) {
     const createTabV3 = createTabVNplus1({
@@ -128,6 +116,19 @@ const main = () => {
     })
     intentsLeft = 0
     return tabs.forEach(createTabV3)
+  }
+
+  if (hasItemWithClassNames(TABS_CLASS_NAMES_V2)) {
+    const createTabV2 = createTabVNplus1({
+      classNames: TABS_CLASS_NAMES_V2
+    })
+    intentsLeft = 0
+    return tabs.forEach(createTabV2)
+  }
+  
+  if (hasItemWithClassNames(TABS_CLASS_NAMES_V1)) {
+    intentsLeft = 0
+    return tabs.forEach(createTabV1)
   }
 
   if (intentsLeft > 0)
