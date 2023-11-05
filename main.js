@@ -90,11 +90,8 @@ const createTabVNplus1 = ({
       ...customOptions,
     }
     const brothers = document.querySelectorAll(classNamesArrayToString(classNames))
-    console.log({ brothers })
     const brother = Array.from(brothers)
       .find(item => item.className.split(" ").length === classNames.length)
-
-    console.log({ brother })
 
     const link = brother.cloneNode(true)
     link.id = id
