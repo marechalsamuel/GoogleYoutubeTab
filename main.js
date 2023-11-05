@@ -5,9 +5,13 @@ const TABS_CLASS_NAMES_V1 = ['hdtb-mitem']
 const ICONS_CLASS_NAME_V1 = 'bmaJhd iJddsb'
 const SEARCH_VAR_NAME = '%search%'
 
-const getGoogleSearch = () => new URLSearchParams(window.location.search).get('q')
+const TABS_CLASS_NAMES_V2 = ['zItAnd', 'FOU1zf']
+const TABS_CLASS_NAMES_V_2023_11_05 = ['LatpMc', 'nPDzT', 'T3FoJb']
 
-const createTabV1 = ({ label, url, icon, customOptions = {} }) => {
+const getGoogleSearchFromUrl = () => new URLSearchParams(window.location.search).get('q')
+const getGoogleSearchFromSearchInput = () => document.body.querySelector("textarea[type='search']").value
+
+const createTabV1 = ({ label, url, icon, customOptions = {} }) => { // TODO use cloneNode
   const id = `google-${label.toLowerCase()}-tab`
   const options = {
     ...DEFAULT_OPTIONS,
@@ -69,27 +73,34 @@ const hasItemWithClassNames = (classNames) => {
   return !!document.querySelector(classNamesArrayToString(classNames))
 }
 
-const TABS_CLASS_NAMES_V2 = ['zItAnd', 'FOU1zf']
 
 const classNamesArrayToString = (array) =>
   array.map(item => `.${item}`).join('')
 
-const createTabV2 = ({ label, url, customOptions = {} }) => {
-  const id = `google-${label.toLowerCase()}-tab`
-  const options = {
-    ...DEFAULT_OPTIONS,
-    ...customOptions,
-  }
+const createTabVNplus1 = ({
+  classNames,
+  linkLabelSelector = 'div',
+  googleSearchGetter = getGoogleSearchFromUrl
+}) => ({ label, url, customOptions = {} }) => {
+  const id = `google-${label.toLowerCase()}-tab` // TODO safe id
   const tab = document.getElementById(id)
   if (!tab) {
-    const brother = document.querySelector(classNamesArrayToString(TABS_CLASS_NAMES_V2))
-    const search = getGoogleSearch()
+    const options = {
+      ...DEFAULT_OPTIONS,
+      ...customOptions,
+    }
+    const brothers = document.querySelectorAll(classNamesArrayToString(classNames))
+    console.log({ brothers })
+    const brother = Array.from(brothers)
+      .find(item => item.className.split(" ").length === classNames.length)
+
+    console.log({ brother })
 
     const link = brother.cloneNode(true)
-    link.href = url.replace(SEARCH_VAR_NAME, search)
+    link.id = id
+    link.href = url.replace(SEARCH_VAR_NAME, googleSearchGetter())
     link.target = options.openInNewWindow ? '_blank' : '_self'
-
-    link.querySelector('div').textContent = label
+    link.querySelector(linkLabelSelector).textContent = label
 
     brother.parentNode.insertBefore(link, brother)
   }
@@ -105,8 +116,21 @@ const main = () => {
   }
 
   if (hasItemWithClassNames(TABS_CLASS_NAMES_V2)) {
+    const createTabV2 = createTabVNplus1({
+      classNames: TABS_CLASS_NAMES_V2
+    })
     intentsLeft = 0
     return tabs.forEach(createTabV2)
+  }
+
+  if (hasItemWithClassNames(TABS_CLASS_NAMES_V_2023_11_05)) {
+    const createTabV3 = createTabVNplus1({
+      classNames: TABS_CLASS_NAMES_V_2023_11_05,
+      linkLabelSelector: 'div>span',
+      googleSearchGetter: getGoogleSearchFromSearchInput
+    })
+    intentsLeft = 0
+    return tabs.forEach(createTabV3)
   }
 
   if (intentsLeft > 0)
