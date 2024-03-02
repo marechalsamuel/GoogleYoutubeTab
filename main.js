@@ -9,7 +9,9 @@ const TABS_CLASS_NAMES_V2 = ['zItAnd', 'FOU1zf']
 const TABS_CLASS_NAMES_V_2023_11_05 = ['LatpMc', 'nPDzT', 'T3FoJb']
 
 const getGoogleSearchFromUrl = () => new URLSearchParams(window.location.search).get('q')
-const getGoogleSearchFromSearchInput = () => document.body.querySelector("textarea[type='search']").value
+const getGoogleSearchFromSearchInput = () => {
+  return document.body.querySelector("textarea[type='search']")?.value || document.body.querySelector("textarea[name='q']")?.value || getGoogleSearchFromUrl()
+}
 
 const createTabV1 = ({ label, url, icon, customOptions = {} }) => { // TODO use cloneNode
   const id = `google-${label.toLowerCase()}-tab`
